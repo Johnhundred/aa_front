@@ -49,11 +49,8 @@
 <svg width="1800" height="800"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
-// .basic > button on click send request to backend, display graph based on it.
 const element = document.querySelector('.basic > button');
-const name = document.querySelector('.basic > input[type=text]').value;
-const links = document.querySelector('.basic > input[type=number]').value;
-element.addEventListener("click", reloadGraph(name, links));
+element.addEventListener("click", reloadGraph);
 
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
@@ -113,6 +110,9 @@ d3.json('https://aa-scr-test.herokuapp.com/', function(error, graph) {
 });
 
 const reloadGraph = (name, links) => {
+  const name = document.querySelector('.basic > input[type=text]').value;
+  const links = document.querySelector('.basic > input[type=number]').value;
+
   if (links > 3) {
     links = 3;
   } else if (links < 1) {
