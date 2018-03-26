@@ -104,7 +104,7 @@ const reloadGraph = () => {
     }
 
     function dragended(d) {
-      if (!d3.event.active) simulation.alphaTarget(0.4).velocityDecay(0.2);
+      if (!d3.event.active) simulation.alphaTarget(0.4);
       d.fx = null;
       d.fy = null;
     }
