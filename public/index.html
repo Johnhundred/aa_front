@@ -113,7 +113,7 @@ const reloadGraph = () => {
     }
 
     function dragended(d) {
-      if (!d3.event.active) simulation.alphaTarget(0.4);
+      if (!d3.event.active) simulation.alphaTarget(0.4).velocityDecay(0.6);
       d.fx = null;
       d.fy = null;
     }
@@ -138,11 +138,6 @@ const reloadGraph = () => {
         .then(function(myJson) {
           const newNodes = uniq(graph.nodes.concat(myJson.nodes));
           const newLinks = graph.links.concat(myJson.links);
-          newNodes.forEach((node) => {
-            node.x = 0;
-            node.y = 0;
-            return node;
-          });
           graph.nodes = newNodes;
           graph.links = newLinks;
 
