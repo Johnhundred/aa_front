@@ -85,7 +85,11 @@ const viewAllData = () => {
       .enter().append("circle")
         .attr("r", function(d) { if(d.label === 'Guild'){ return 8; } else if (d.label === 'Character') { return 5; } })
         .attr("class", function(d) { return d.label; })
-        .attr("fill", function(d) { return color(d.group); });
+        .attr("fill", function(d) { return color(d.group); })
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
 
     node.append("title")
         .text(function(d) { return `${d.label}: ${d.id}`; });
@@ -110,6 +114,26 @@ const viewAllData = () => {
       node
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; });
+    }
+
+    function dragstarted(d) {
+      if (!d3.event.active) {
+        simulation.alphaTarget(0.02);
+        simulation.restart();
+      }
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(d) {
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    }
+
+    function dragended(d) {
+      if (!d3.event.active) simulation.alphaTarget(0.3);
+      d.fx = null;
+      d.fy = null;
     }
   });
 }
@@ -137,6 +161,7 @@ const reloadGraph = () => {
   var color = d3.scaleOrdinal(d3.schemeCategory20);
 
   var simulation = d3.forceSimulation()
+    .alphaDecay(0.03)
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
     .force("charge", d3.forceManyBody())
     .force("collision", d3.forceCollide(8))
@@ -147,6 +172,8 @@ const reloadGraph = () => {
 
   d3.json(url, function(error, graph) {
     if (error) throw error;
+
+    localStorage.setItem("graph", JSON.stringify(graph));
 
     var link = svg.append("g")
         .attr("class", "links")
@@ -163,7 +190,12 @@ const reloadGraph = () => {
       .enter().append("circle")
         .attr("r", function(d) { if(d.label === 'Guild'){ return 8; } else if (d.label === 'Character') { return 5; } })
         .attr("class", function(d) { return d.label; })
-        .attr("fill", function(d) { return color(d.group); });
+        .attr("fill", function(d) { return color(d.group); })
+        .on("click", updateNodeConnections)
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
 
     node.append("title")
         .text(function(d) { return `${d.label}: ${d.id}`; });
@@ -188,6 +220,41 @@ const reloadGraph = () => {
       node
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; });
+    }
+
+    function dragstarted(d) {
+      if (!d3.event.active) {
+        simulation.alphaTarget(0.03);
+        simulation.restart();
+      }
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(d) {
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    }
+
+    function dragended(d) {
+      if (!d3.event.active) simulation.alphaTarget(0.4).velocityDecay(0.2);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    function updateNodeConnections(d) {
+      const name = d.id;
+      const url = 'https://aa-scr-test.herokuapp.com/update/' + name;
+
+      console.log(url);
+      fetch(url, { mode: 'cors' })
+        .then(function(response) {
+          console.log(response.json());
+          return true;
+        })
+        .then(function(myJson) {
+          console.log(myJson);
+        });
     }
   });
 
