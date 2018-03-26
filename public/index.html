@@ -85,6 +85,7 @@ const reloadGraph = () => {
   var color = d3.scaleOrdinal(d3.schemeCategory20);
 
   var simulation = d3.forceSimulation()
+    .alphaTarget(0.8)
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
     .force("charge", d3.forceManyBody())
     .force("collision", d3.forceCollide(8))
