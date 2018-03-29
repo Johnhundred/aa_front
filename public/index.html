@@ -216,7 +216,7 @@ const reloadGraph = () => {
             .on("end", dragended));
 
       node.append("title")
-          .text(function(d) { return `${d.label}: ${d.id} (${d.race ? d.race : "Guild"})`; });
+          .text(function(d) { return `${d.label}: ${d.id} (${d.race ? d.race : d.label === "Guild" ? "Guild" : "No race specified"})`; });
 
       node.append("text")
         .attr("pointer-events", "none")
