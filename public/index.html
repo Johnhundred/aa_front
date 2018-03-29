@@ -105,14 +105,14 @@ const reloadGraph = () => {
     .call(d3.zoom().on("zoom", zoomed))
     .append("g");
 
-  var width = 5000,
-    height = 5000;
+  var width = 10000,
+    height = 10000;
 
   var svg = container.append("svg")
-    .attr("width", 5000)
-    .attr("height", 5000)
-    .attr("x", -2500)
-    .attr("y", -2500);
+    .attr("width", 10000)
+    .attr("height", 10000)
+    .attr("x", -5000)
+    .attr("y", -5000);
 
   var color = d3.scaleOrdinal(d3.schemeCategory20);
 
@@ -169,13 +169,13 @@ const reloadGraph = () => {
         })
         .then(function(myJson) {
           myJson.nodes.forEach((node) => {
-            node.x = 2400;
-            node.y = 2400;
+            node.x = 4900;
+            node.y = 4900;
             return node;
           });
           myJson.links.forEach((link) => {
-            link.x = 2400;
-            link.y = 2400;
+            link.x = 4900;
+            link.y = 4900;
             return link;
           });
           const newNodes = uniq(graph.nodes.concat(myJson.nodes));
